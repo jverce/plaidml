@@ -7,9 +7,6 @@ jobs:
           BZL_PY_VER: PY3
           PLAIDML_EXPERIMENTAL: '1'
           PLAIDML_DEVICE_IDS: opencl_cpu.0
-        auth:
-          username: _json_key
-          password: $GCLOUD_SERVICE_KEY
 
     steps:
       - checkout
@@ -22,5 +19,5 @@ jobs:
           command: >-
             bazel build
             --config=linux_x86_64 --force_python=$BZL_PY_VER --google_default_credentials
-            --remote_http_cache=https://storage.googleapis.com/plaidml-bazel-cache-jverce
+            --remote_http_cache=https://storage.googleapis.com/plaidml-cache-bazel-jverce
             plaidml:wheel plaidml/keras:wheel
