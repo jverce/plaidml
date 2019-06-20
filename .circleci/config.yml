@@ -11,13 +11,15 @@ jobs:
     steps:
       - checkout
       - run: |
-          echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=- |
+          echo $GCLOUD_SERVICE_KEY > /tmp/gcloud-service-key.json |
+          gcloud auth activate-service-account --key-file=/tmp/gcloud-service-key.json |
           gcloud --quiet config set project ${GOOGLE_PROJECT_ID} |
           gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
       - run:
           name: Build
           command: >-
             bazel build
-            --config=linux_x86_64 --force_python=$BZL_PY_VER --google_default_credentials
+            --config=linux_x86_64 --force_python=$BZL_PY_VER
+            --google_credentials=/tmp/gcloud-service-key.json
             --remote_http_cache=https://storage.googleapis.com/plaidml-cache-bazel-jverce
             plaidml:wheel plaidml/keras:wheel
